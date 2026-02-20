@@ -1,0 +1,14 @@
+CREATE TABLE IF NOT EXISTS peers (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    ab_guid TEXT NOT NULL REFERENCES address_books(guid) ON DELETE CASCADE,
+    rustdesk_id TEXT NOT NULL,
+    hash TEXT NOT NULL DEFAULT '',
+    username TEXT NOT NULL DEFAULT '',
+    hostname TEXT NOT NULL DEFAULT '',
+    platform TEXT NOT NULL DEFAULT '',
+    alias TEXT NOT NULL DEFAULT '',
+    note TEXT NOT NULL DEFAULT '',
+    created_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(ab_guid, rustdesk_id)
+);

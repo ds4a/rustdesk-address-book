@@ -1,0 +1,20 @@
+# RustDesk Address Book Server Configuration
+# Copy this file to config.toml and adjust as needed.
+# All values can also be set via environment variables (prefixed RUSTDESK_AB_).
+
+# Port to listen on (default: 21114 — matches RustDesk API port)
+port = 21114
+
+# SQLite database path
+db_path = "data/db.sqlite3"
+
+# JWT secret for signing auth tokens (CHANGE THIS IN PRODUCTION)
+# If not set, a random secret is generated on each startup.
+jwt_secret = "change-me-to-a-long-random-string"
+
+# Default admin credentials (only used on first run)
+admin_username = "admin"
+admin_password = "admin"
+
+# Token expiry in hours (default: 168 = 7 days)
+token_expiry_hours = 168
