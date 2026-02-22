@@ -1,6 +1,6 @@
 # RustDesk Address Book Server
 
-An open-source address book server for [RustDesk](https://rustdesk.com) self-hosted deployments. Runs alongside the OSS `hbbs`/`hbbr` server and provides the address book API (port 21114) that the RustDesk client expects — plus a web admin console matching the RustDesk look and feel.
+A complete, self-hosted [RustDesk](https://rustdesk.com) server stack — open-source and free. The included Docker Compose file runs the full suite: the OSS rendezvous server (`hbbs`), relay server (`hbbr`), and this address book server, which adds the address book API and web admin console that RustDesk Pro normally charges for.
 
 ## Why?
 
@@ -19,6 +19,8 @@ The RustDesk OSS server handles peer discovery and relay, but has no address boo
 - **Docker Compose** — one command to run everything
 
 ## Quick Start (Docker Compose)
+
+This deploys the **complete RustDesk server stack** — rendezvous, relay, and address book — all in one command. No separate RustDesk server installation needed.
 
 **Prerequisites:** Docker and Docker Compose installed.
 
