@@ -1,0 +1,39 @@
+services:
+  hbbs:
+    image: rustdesk/rustdesk-server:latest
+    container_name: rustdesk-hbbs
+    command: hbbs -r rustdesk-hbbr:21117
+    volumes:
+      - ./data/hbbs:/root
+    ports:
+      - "21115:21115"
+      - "21116:21116"
+      - "21116:21116/udp"
+      - "21118:21118"
+    depends_on:
+      - hbbr
+    restart: unless-stopped
+
+  hbbr:
+    image: rustdesk/rustdesk-server:latest
+    container_name: rustdesk-hbbr
+    command: hbbr
+    volumes:
+      - ./data/hbbr:/root
+    ports:
+      - "21117:21117"
+      - "21119:21119"
+    restart: unless-stopped
+
+  address-book:
+    build: .
+    container_name: rustdesk-address-book
+    ports:
+      - "21114:21114"
+    volumes:
+      - ./data/ab:/data
+    environment:
+      - RUSTDESK_AB_DB_PATH=/data/db.sqlite3
+      - RUSTDESK_AB_JWT_SECRET=${JWT_SECRET:-please-change-this-secret}
+      - RUSTDESK_AB_ADMIN_PASSWORD=${ADMIN_PASSWORD:-admin}
+    restart: unless-stopped

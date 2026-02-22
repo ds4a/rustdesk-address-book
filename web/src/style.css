@@ -1,0 +1,53 @@
+@import "tailwindcss";
+
+@theme {
+  /* RustDesk brand colors */
+  --color-rd-primary: #0071FF;
+  --color-rd-primary-hover: #0060DD;
+  --color-rd-scaffold: #18191E;
+  --color-rd-card: #24252B;
+  --color-rd-card-hover: #2A2B32;
+  --color-rd-border: #3A3B42;
+  --color-rd-light-card: #EFEFF2;
+  --color-rd-light-border: #DDDDE0;
+  --color-rd-text: #E4E4E7;
+  --color-rd-text-secondary: #9CA3AF;
+  --color-rd-success: #22C55E;
+  --color-rd-warning: #F59E0B;
+  --color-rd-danger: #EF4444;
+
+  /* Platform colors (matching RustDesk client) */
+  --color-platform-windows: #0078D4;
+  --color-platform-macos: #A2AAAD;
+  --color-platform-linux: #F5A623;
+  --color-platform-android: #3DDC84;
+  --color-platform-ios: #007AFF;
+
+  --radius-card: 12px;
+  --radius-tag: 4px;
+}
+
+/* Base styles */
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+#app {
+  min-height: 100vh;
+}
+
+/* Scrollbar styling for dark mode */
+.dark ::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+.dark ::-webkit-scrollbar-track {
+  background: var(--color-rd-scaffold);
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: var(--color-rd-border);
+  border-radius: 4px;
+}
