@@ -18,9 +18,11 @@ The RustDesk OSS server handles peer discovery and relay, but has no address boo
 - **SQLite** — no external database required
 - **Docker Compose** — one command to run everything
 
-## Quick Start (Docker Compose)
+## Quick Start
 
-This deploys the **complete RustDesk server stack** — rendezvous, relay, and address book — all in one command. No separate RustDesk server installation needed.
+### Option A — Full stack (new deployment)
+
+Use this if you don't already have a RustDesk server. The Docker Compose file runs everything: rendezvous (`hbbs`), relay (`hbbr`), and the address book server.
 
 **Prerequisites:** Docker and Docker Compose installed.
 
@@ -32,12 +34,9 @@ cd rustdesk-address-book
 Create a `.env` file with your secrets:
 
 ```bash
+cat > .env <<EOF
 JWT_SECRET=$(openssl rand -hex 32)
 ADMIN_PASSWORD=your-secure-password
-
-cat > .env <<EOF
-JWT_SECRET=${JWT_SECRET}
-ADMIN_PASSWORD=${ADMIN_PASSWORD}
 EOF
 ```
 
@@ -54,6 +53,39 @@ This starts three containers:
 | `rustdesk-hbbs` | 21115, 21116/tcp+udp, 21118 | Rendezvous / ID server |
 | `rustdesk-hbbr` | 21117, 21119 | Relay server |
 | `rustdesk-address-book` | 21114 | Address book API + web console |
+
+### Option B — Address book only (existing RustDesk server)
+
+Use this if you already have `hbbs`/`hbbr` running. Just run the address book container on the same host — it's completely independent of the relay/rendezvous servers.
+
+```bash
+docker run -d \
+  --name rustdesk-address-book \
+  --restart unless-stopped \
+  -p 21114:21114 \
+  -v $(pwd)/data/ab:/data \
+  -e RUSTDESK_AB_JWT_SECRET=$(openssl rand -hex 32) \
+  -e RUSTDESK_AB_ADMIN_PASSWORD=your-secure-password \
+  ghcr.io/ds4a/rustdesk-address-book:latest
+```
+
+Or add just the `address-book` service to your existing `docker-compose.yml`:
+
+```yaml
+services:
+  address-book:
+    image: ghcr.io/ds4a/rustdesk-address-book:latest
+    # To build locally instead: build: /path/to/rustdesk-address-book
+    container_name: rustdesk-address-book
+    ports:
+      - "21114:21114"
+    volumes:
+      - ./data/ab:/data
+    environment:
+      - RUSTDESK_AB_JWT_SECRET=your-secret-here
+      - RUSTDESK_AB_ADMIN_PASSWORD=your-password-here
+    restart: unless-stopped
+```
 
 Open the web console at **http://your-server:21114** and log in with `admin` / your `ADMIN_PASSWORD`.
 
