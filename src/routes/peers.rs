@@ -14,6 +14,7 @@ use crate::state::AppState;
 pub fn routes() -> Router<AppState> {
     Router::new()
         .route("/api/ab/peers", get(get_peers))
+        .route("/api/peers", get(get_peers))
         .route("/api/ab/peer/add/{guid}", post(add_peer))
         .route("/api/ab/peer/update/{guid}", put(update_peer))
         .route("/api/ab/peer/{guid}", delete(delete_peers))

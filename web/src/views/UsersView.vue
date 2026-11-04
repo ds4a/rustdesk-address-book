@@ -6,6 +6,10 @@ const users = ref<abApi.UserItem[]>([])
 const showAdd = ref(false)
 const newUser = ref({ username: '', password: '', name: '', email: '', is_admin: false })
 const error = ref('')
+const passwordTarget = ref<abApi.UserItem | null>(null)
+const replacementPassword = ref('')
+const confirmationPassword = ref('')
+const passwordMessage = ref('')
 
 async function loadUsers() {
   const res = await abApi.getUsers()
@@ -45,6 +49,28 @@ async function toggleStatus(user: abApi.UserItem) {
   await loadUsers()
 }
 
+async function savePassword() {
+  passwordMessage.value = ''
+  if (!passwordTarget.value) return
+  if (replacementPassword.value.length < 8) {
+    passwordMessage.value = 'Use at least 8 characters.'
+    return
+  }
+  if (replacementPassword.value !== confirmationPassword.value) {
+    passwordMessage.value = 'Passwords do not match.'
+    return
+  }
+  try {
+    await abApi.updateUser(passwordTarget.value.id, { password: replacementPassword.value })
+    passwordTarget.value = null
+    replacementPassword.value = ''
+    confirmationPassword.value = ''
+    passwordMessage.value = 'Password updated successfully.'
+  } catch (e: any) {
+    passwordMessage.value = e.message || 'Password update failed.'
+  }
+}
+
 onMounted(loadUsers)
 </script>
 
@@ -61,6 +87,21 @@ onMounted(loadUsers)
         </svg>
         Add User
       </button>
+    </div>
+
+    <div v-if="passwordMessage" class="mb-4 text-sm text-blue-600">{{ passwordMessage }}</div>
+    <div v-if="passwordTarget" class="bg-white dark:bg-rd-card border border-gray-200 dark:border-rd-border rounded-xl p-6 mb-6 max-w-lg">
+      <h2 class="font-semibold mb-3">Set password for {{ passwordTarget.username }}</h2>
+      <form @submit.prevent="savePassword" class="flex flex-col gap-3">
+        <label class="text-sm">New password (minimum 8 characters)</label>
+        <input v-model="replacementPassword" type="password" autocomplete="new-password" minlength="8" required class="border rounded-lg p-2 text-gray-900" />
+        <label class="text-sm">Confirm new password</label>
+        <input v-model="confirmationPassword" type="password" autocomplete="new-password" minlength="8" required class="border rounded-lg p-2 text-gray-900" />
+        <div class="flex gap-3">
+          <button type="submit" class="px-4 py-2 rounded-lg bg-rd-primary text-white">Save Password</button>
+          <button type="button" @click="passwordTarget = null; replacementPassword = ''; confirmationPassword = ''; passwordMessage = ''" class="px-4 py-2 rounded-lg border">Cancel</button>
+        </div>
+      </form>
     </div>
 
     <!-- Add user form -->
@@ -129,6 +170,7 @@ onMounted(loadUsers)
               </button>
             </td>
             <td class="px-6 py-3 text-right">
+              <button @click="passwordTarget = user; replacementPassword = ''; confirmationPassword = ''; passwordMessage = ''" class="text-sm text-rd-primary mr-4">Set Password</button>
               <button
                 @click="handleDelete(user.id, user.username)"
                 class="text-sm text-gray-400 hover:text-rd-danger transition-colors"
