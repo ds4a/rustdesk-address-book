@@ -10,7 +10,7 @@ use crate::state::AppState;
 pub fn routes() -> Router<AppState> {
     Router::new()
         .route("/api/ab", get(get_ab_legacy).post(update_ab_legacy))
-        .route("/api/ab/personal", get(get_personal))
+        .route("/api/ab/personal", get(get_personal).post(get_personal))
         .route("/api/ab/shared/profiles", get(get_shared_profiles))
         .route("/api/ab/settings", get(get_ab_settings))
 }
