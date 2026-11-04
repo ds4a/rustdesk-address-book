@@ -12,8 +12,13 @@ use crate::state::AppState;
 
 pub fn routes() -> Router<AppState> {
     Router::new()
+        .route("/api/device-group/accessible", get(accessible_device_groups))
         .route("/api/groups", get(list_groups).post(create_group))
         .route("/api/groups/{id}", put(update_group).delete(delete_group))
+}
+
+async fn accessible_device_groups(AuthUser(_claims): AuthUser) -> Json<Value> {
+    Json(json!({"data": []}))
 }
 
 fn require_admin(claims: &crate::auth::jwt::Claims) -> Result<(), ApiError> {
