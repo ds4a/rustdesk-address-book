@@ -11,8 +11,13 @@ use crate::state::AppState;
 pub fn routes() -> Router<AppState> {
     Router::new()
         .route("/api/login", post(login))
+        .route("/api/login-options", get(login_options))
         .route("/api/logout", post(logout))
         .route("/api/currentUser", get(current_user))
+}
+
+async fn login_options() -> Json<Value> {
+    Json(json!([]))
 }
 
 async fn login(
