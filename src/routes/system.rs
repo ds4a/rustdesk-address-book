@@ -10,6 +10,7 @@ pub fn routes() -> Router<AppState> {
         .route("/api/heartbeat", post(heartbeat))
         .route("/api/system/heartbeat", post(heartbeat))
         .route("/api/system/sysinfo", post(sysinfo))
+        .route("/api/sysinfo", post(sysinfo))
         .route("/api/audit", post(audit))
 }
 
